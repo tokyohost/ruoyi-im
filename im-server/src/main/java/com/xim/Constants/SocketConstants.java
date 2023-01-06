@@ -11,5 +11,7 @@ import io.netty.util.AttributeKey;
  */
 
 public class SocketConstants {
+    public static final String HEART_BEAT = "heartbeat";
+    public static final String HEART_BEAT_PONG = "pong";
     public static AttributeKey<String> USER_ID = AttributeKey.valueOf("USER_ID");
 }

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -57,8 +58,9 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
             frame.release();
             return;
         }
-        if (frame instanceof PingWebSocketFrame) {
+        if (frame instanceof PingWebSocketFrame || checkHeartBeat(frame)) {
             ctx.write(new PongWebSocketFrame(frame.content().retain()));
+            ctx.writeAndFlush(new TextWebSocketFrame(SocketConstants.HEART_BEAT_PONG));
             frame.release();
             return;
         }
@@ -81,6 +83,22 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
             // 直接返回
             ctx.write(frame.retain());
             frame.release();
+        }
+    }
+
+    private boolean checkHeartBeat(WebSocketFrame frame) {
+        if (frame instanceof TextWebSocketFrame) {
+            String text = ((TextWebSocketFrame) frame).text();
+            if (StringUtils.isEmpty(text)) {
+                return false;
+            }
+            if (text.equals(SocketConstants.HEART_BEAT)) {
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
         }
     }
 

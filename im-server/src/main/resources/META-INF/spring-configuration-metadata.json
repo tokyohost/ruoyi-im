@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "im.server.enable",
+      "defaultValue": false
+    },
+    {
+      "name": "im.server.port",
+      "defaultValue": 8088
+    },
+    {
+      "name": "im.server.path",
+      "defaultValue": "/"
+    }
+  ]
+}

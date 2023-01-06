@@ -197,7 +197,10 @@ export default {
                 // 客户端上线
                 this.$data.socket.send(JSON.stringify({
                     clientChatEn: this.$data.clientChatEn,
-                    serverChatId: serverChatId
+                    serverChatId: serverChatId,
+                    msgType: 'text',
+                    sendBy: "test",
+                    sendTo: "xuehui"
                 }));
 
 

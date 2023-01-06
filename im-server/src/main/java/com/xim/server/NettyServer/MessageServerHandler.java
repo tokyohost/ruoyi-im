@@ -1,8 +1,9 @@
-package com.xim.NettyServer;
+package com.xim.server.NettyServer;
 
-import com.xim.Constants.SocketConstants;
-import com.xim.Store.ChannelStore;
-import com.xim.Work.TextMessageWorkHandler;
+import cn.hutool.json.JSONUtil;
+import com.xim.server.Constants.SocketConstants;
+import com.xim.server.Store.ChannelStore;
+import com.xim.server.Work.TextMessageWorkHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -66,7 +67,7 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
         }
         if (frame instanceof TextWebSocketFrame) {
             // 直接返回
-            log.info("msg:" + frame.toString());
+            log.debug("msg:" + frame.toString());
             String uid = null;
             if (ctx.channel().hasAttr(SocketConstants.USER_ID)) {
                 uid = ctx.channel().attr(SocketConstants.USER_ID).get();
@@ -74,7 +75,22 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
             }
 
             for (TextMessageWorkHandler textMessageWorkHandler : textMessageWorkHandlers) {
-                textMessageWorkHandler.handMessage(((TextWebSocketFrame) frame).text(), uid, ctx);
+                String text = ((TextWebSocketFrame) frame).text();
+                boolean typeJSON = JSONUtil.isTypeJSON(text);
+                if(typeJSON) {
+                    //todo json消息
+                    boolean handJsonMessage = textMessageWorkHandler.handJsonMessage(text, uid, ctx, frame);
+                    if(!handJsonMessage){
+                        textMessageWorkHandler.handMessage(text, uid, ctx);
+                    }
+                }else {
+                    //todo 文本消息
+                    boolean handTextMessage = textMessageWorkHandler.handTextMessage(text, uid, ctx);
+                    if(!handTextMessage){
+                        textMessageWorkHandler.handMessage(text, uid, ctx);
+                    }
+                }
+
             }
             frame.release();
             return;

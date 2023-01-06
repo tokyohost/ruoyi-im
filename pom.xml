@@ -189,6 +189,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>im-server</module>
+        <module>im-system</module>
     </modules>
     <packaging>pom</packaging>
 

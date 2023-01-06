@@ -1,4 +1,4 @@
-package com.xim;
+package com.xim.server;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -21,6 +21,19 @@ public class ImServerProperties {
      */
     Integer port;
 
+    /**
+     * 鉴权凭证存储的key，鉴权凭证默认会从header和uri中获取
+     */
+    String authKey;
+
+    public String getAuthKey() {
+        return authKey;
+    }
+
+    public ImServerProperties setAuthKey(String authKey) {
+        this.authKey = authKey;
+        return this;
+    }
 
     public String getPath() {
         return path;

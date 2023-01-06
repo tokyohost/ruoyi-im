@@ -11,6 +11,10 @@
     {
       "name": "im.server.path",
       "defaultValue": "/"
+    },
+    {
+      "name": "im.server.authKey",
+      "defaultValue": "uid"
     }
   ]
 }

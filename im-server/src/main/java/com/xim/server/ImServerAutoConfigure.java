@@ -1,10 +1,12 @@
-package com.xim;
+package com.xim.server;
 
-import com.xim.NettyServer.MessageServerHandler;
-import com.xim.NettyServer.ServerRuner;
-import com.xim.NettyServer.WebSockerServerHandler;
-import com.xim.Store.ChannelStore;
-import com.xim.Work.DefaultTextMessageWorkHandler;
+import com.xim.server.NettyServer.MessageServerHandler;
+import com.xim.server.NettyServer.ServerRuner;
+import com.xim.server.NettyServer.WebSockerServerHandler;
+import com.xim.server.Store.ChannelStore;
+import com.xim.server.Work.AuthRequestHandler;
+import com.xim.server.Work.DefaultAuthRequestHandler;
+import com.xim.server.Work.DefaultTextMessageWorkHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -59,6 +61,11 @@ public class ImServerAutoConfigure {
     @Bean
     public DefaultTextMessageWorkHandler getDefaultTextMessageWorkHandler() {
         return new DefaultTextMessageWorkHandler(channelStore);
+    }
+
+    @Bean
+    public AuthRequestHandler getAuthRequestHandler() {
+        return new DefaultAuthRequestHandler(imServerProperties);
     }
 
     @Bean

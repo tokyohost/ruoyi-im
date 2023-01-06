@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.xim.ImServerAutoConfigure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.xim.server.ImServerAutoConfigure

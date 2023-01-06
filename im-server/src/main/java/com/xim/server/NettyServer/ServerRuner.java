@@ -1,8 +1,7 @@
-package com.xim.NettyServer;
+package com.xim.server.NettyServer;
 
 import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.URLUtil;
-import com.xim.ImServerProperties;
+import com.xim.server.ImServerProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -19,10 +18,6 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.ResourceLeakDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 

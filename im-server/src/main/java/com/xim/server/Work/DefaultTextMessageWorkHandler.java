@@ -1,12 +1,9 @@
-package com.xim.Work;
+package com.xim.server.Work;
 
-import com.xim.Store.ChannelStore;
+import com.xim.server.Store.ChannelStore;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author xuehui_li
@@ -25,7 +22,7 @@ public class DefaultTextMessageWorkHandler implements TextMessageWorkHandler {
 
     @Override
     public void handMessage(String msg, String uid, ChannelHandlerContext ctx) {
-        log.info("收到用户：{} 的消息:{}", uid, msg);
+//        log.info("收到用户：{} 的消息:{}", uid, msg);
 //        TextWebSocketFrame textWebSocketFrame = new TextWebSocketFrame(msg + " cp");
 //        ctx.channel().writeAndFlush(textWebSocketFrame);
 

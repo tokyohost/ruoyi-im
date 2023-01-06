@@ -1,4 +1,4 @@
-package com.xim.Constants;
+package com.xim.server.Constants;
 
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.util.AttributeKey;

@@ -1,8 +1,8 @@
-package com.xim.NettyServer;
+package com.xim.server.NettyServer;
 
-import com.xim.Constants.SocketConstants;
-import com.xim.Store.ChannelStore;
-import io.netty.buffer.ByteBufUtil;
+import com.xim.server.Constants.SocketConstants;
+import com.xim.server.Store.ChannelStore;
+import com.xim.server.Work.AuthRequestHandler;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import org.slf4j.Logger;
@@ -10,12 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
+import static com.xim.server.Utils.HttpUtils.sendHttpResponse;
 import static io.netty.handler.codec.http.HttpMethod.GET;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
@@ -35,27 +34,29 @@ public class WebSockerServerHandler extends SimpleChannelInboundHandler<FullHttp
     @Autowired
     private ChannelStore channelStore;
 
+    @Autowired
+    private List<AuthRequestHandler> authRequestHandlers;
+
     public WebSockerServerHandler() {
         super(false);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("channel Active:"+ctx);
-        log.info("active channel count: {}",channelStore.getChannelCount());
+        log.debug("channel Active:"+ctx);
+        log.debug("active channel count: {}",channelStore.getChannelCount());
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("channel Inactive:"+ctx);
+        log.debug("channel Inactive:"+ctx);
         channelStore.unRegistChannel(ctx);
         super.channelInactive(ctx);
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
-        log.info("收到消息："+msg);
         handleHttpRequest(ctx, msg);
     }
 
@@ -91,48 +92,30 @@ public class WebSockerServerHandler extends SimpleChannelInboundHandler<FullHttp
         }
 
         //鉴权+绑定user
-        log.info("鉴权通过");
-        HttpHeaders headers = req.headers();
-        String uid = headers.get("uid");
-        if (StringUtils.hasLength(uid)) {
-            ctx.channel().attr(SocketConstants.USER_ID).set(uid);
-            channelStore.registChannel(uid, ctx);
-        }else{
-            //从uri 取
+        if(CollectionUtils.isEmpty(authRequestHandlers)){
+            throw new RuntimeException("未配置鉴权器");
+        }
 
-            Map<String, List<String>> stringListMap = cn.hutool.http.HttpUtil.decodeParams(req.uri(), "UTF-8");
-            List<String> strings = stringListMap.get("uid");
-            if (!CollectionUtils.isEmpty(strings)) {
-
-                ctx.channel().attr(SocketConstants.USER_ID).set(strings.get(0));
-                channelStore.registChannel(strings.get(0), ctx);
-            }else {
-                log.error("链接未携带uid");
+        for (AuthRequestHandler requestHandler : authRequestHandlers) {
+            boolean b = requestHandler.checkAuth(ctx, req);
+            if (b) {
+                String uid = requestHandler.authSucc(ctx, req);
+                ctx.channel().attr(SocketConstants.USER_ID).set(uid);
+                channelStore.registChannel(uid, ctx);
+            }else{
+                FullHttpResponse fullHttpResponse = requestHandler.authError(ctx, req);
+                sendHttpResponse(ctx, req, fullHttpResponse);
+                return;
             }
         }
-        //往下走
-//        super.channelRead(ctx,req);
+
         ctx.fireChannelRead(req);
 
     }
 
 
 
-    private static void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
-        // 生成错误页面
-        HttpResponseStatus responseStatus = res.status();
-        if (responseStatus.code() != 200) {
-            ByteBufUtil.writeUtf8(res.content(), responseStatus.toString());
-            HttpUtil.setContentLength(res, res.content().readableBytes());
-        }
-        // 发送response
-        boolean keepAlive = HttpUtil.isKeepAlive(req) && responseStatus.code() == 200;
-        HttpUtil.setKeepAlive(res, keepAlive);
-        ChannelFuture future = ctx.write(res);
-        if (!keepAlive) {
-            future.addListener(ChannelFutureListener.CLOSE);
-        }
-    }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {

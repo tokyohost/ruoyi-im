@@ -75,18 +75,9 @@ DictData.install()
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
-// font-awesome
-import 'font-awesome/css/font-awesome.min.css'
 
 // config
 Vue.config.productionTip = false;
-
-// axios
-import http from '@/common/http.js';
-Vue.prototype.$http = http;
-// ak
-import ak from '@/common/ak.js';
-Vue.prototype.$ak = ak;
 new Vue({
   el: '#app',
   router,

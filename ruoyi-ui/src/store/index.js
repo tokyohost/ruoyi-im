@@ -7,7 +7,6 @@ import tagsView from './modules/tagsView'
 import permission from './modules/permission'
 import settings from './modules/settings'
 import getters from './getters'
-import {imServerStore} from "@/store/imServerStore";
 
 
 Vue.use(Vuex)
@@ -22,7 +21,6 @@ const store = new Vuex.Store({
     settings
   },
   getters,
-  imServerStore: imServerStore
 })
 
 export default store

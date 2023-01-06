@@ -5,8 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-import imServer from "../components/imServer/imServer.vue";
-import imClient from "../components/imClient/imClient.vue";
 
 /**
  * Note: 路由配置项
@@ -48,8 +46,6 @@ export const constantRoutes = [
     component: () => import('@/views/login'),
     hidden: true
   },
-  { path: '/imServer', name: 'imServer', component: imServer ,hidden: true },
-  { path: '/imClient', name: 'imClient', component: imClient ,hidden: true },
   {
     path: '/register',
     component: () => import('@/views/register'),

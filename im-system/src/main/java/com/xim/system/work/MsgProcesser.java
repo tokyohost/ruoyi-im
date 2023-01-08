@@ -11,7 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
  * @Content
  */
 
-public interface MsgProcesser<T extends BaseMsg> {
+public interface MsgProcesser<T extends BaseMsg<?>> {
 
     MsgType getMsgType();
 

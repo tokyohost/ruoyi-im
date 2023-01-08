@@ -10,4 +10,6 @@ package com.xim.system.constant;
 public class MsgConstant {
 
     public final static String MSG_TYPE= "msgType";
+
+    public final static String IS_GROUP_CHAT = "isGroupChatMsg";
 }

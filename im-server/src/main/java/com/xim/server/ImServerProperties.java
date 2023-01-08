@@ -26,6 +26,20 @@ public class ImServerProperties {
      */
     String authKey;
 
+    /**
+     * 群聊消息分发线程
+     */
+    Integer groupChatThreadNumber;
+
+    public Integer getGroupChatThreadNumber() {
+        return groupChatThreadNumber;
+    }
+
+    public ImServerProperties setGroupChatThreadNumber(Integer groupChatThreadNumber) {
+        this.groupChatThreadNumber = groupChatThreadNumber;
+        return this;
+    }
+
     public String getAuthKey() {
         return authKey;
     }

@@ -12,6 +12,25 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
  */
 
 public abstract class BaseMsg<T> {
+
+
+    /**
+     * 消息唯一id
+     */
+    private T msgId;
+
+    /**
+     * 消息所属会话id
+     * 此会话id 可以是发送人id+接收人id  hash 后结果，
+     * 也可以是 接收群的id,群消息没有所属人，所属对象是群
+     */
+    private T sessionId;
+
+    /**
+     * 标识是否是群消息
+     */
+    private boolean isGroupChatMsg = false;
+
     /**
      * 消息类型
      */
@@ -35,6 +54,33 @@ public abstract class BaseMsg<T> {
      * 消息原始frame
      */
     private WebSocketFrame webSocketFrame;
+
+    public boolean isGroupChatMsg() {
+        return isGroupChatMsg;
+    }
+
+    public BaseMsg<T> setGroupChatMsg(boolean groupChatMsg) {
+        isGroupChatMsg = groupChatMsg;
+        return this;
+    }
+
+    public T getMsgId() {
+        return msgId;
+    }
+
+    public BaseMsg<T> setMsgId(T msgId) {
+        this.msgId = msgId;
+        return this;
+    }
+
+    public T getSessionId() {
+        return sessionId;
+    }
+
+    public BaseMsg<T> setSessionId(T sessionId) {
+        this.sessionId = sessionId;
+        return this;
+    }
 
     public T getSendBy() {
         return sendBy;

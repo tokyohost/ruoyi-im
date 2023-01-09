@@ -39,7 +39,11 @@ public enum MsgType{
     /**
      * 未知消息
      */
-    UNKNOWN("unknown");
+    UNKNOWN("unknown"),
+    /**
+     * 系统消息
+     */
+    SYSTEM("system");
     private String type;
     MsgType(String type) {
         this.type = type;

@@ -1,4 +1,4 @@
-package com.xim.server.Work;
+package com.xim.server.work;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;

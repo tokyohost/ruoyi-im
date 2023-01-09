@@ -1,4 +1,4 @@
-package com.xim.system.utils;
+package com.xim.server.utils;
 
 import com.xim.server.ImServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class AsyncThreadPoolManage {
                 if (Objects.nonNull(executorService)) {
                     return executorService;
                 }else{
-                    Executor executorService = new ThreadPoolExecutor(0, imServerProperties.getGroupChatThreadNumber(), 0L, TimeUnit.MILLISECONDS, new SynchronousQueue(), (t)->{
+                    Executor executorService = new ThreadPoolExecutor(0, imServerProperties.getGroupChatThreadNumber(), 30L, TimeUnit.MILLISECONDS, new SynchronousQueue(), (t)->{
                         Thread thread = Executors.defaultThreadFactory().newThread(t);
                         if (!thread.isDaemon()) {
                             thread.setDaemon(true);

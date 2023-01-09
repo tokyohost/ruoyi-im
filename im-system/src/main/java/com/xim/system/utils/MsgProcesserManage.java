@@ -1,6 +1,7 @@
-package com.xim.system.work;
+package com.xim.system.utils;
 
 import com.xim.system.enums.MsgType;
+import com.xim.system.work.MsgProcesser;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

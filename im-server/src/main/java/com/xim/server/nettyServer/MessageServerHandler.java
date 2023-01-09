@@ -1,9 +1,10 @@
-package com.xim.server.NettyServer;
+package com.xim.server.nettyServer;
 
 import cn.hutool.json.JSONUtil;
-import com.xim.server.Constants.SocketConstants;
-import com.xim.server.Store.ChannelStore;
-import com.xim.server.Work.TextMessageWorkHandler;
+import com.xim.server.constants.SocketConstants;
+import com.xim.server.ImServerProperties;
+import com.xim.server.store.ChannelStore;
+import com.xim.server.work.TextMessageWorkHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -33,6 +34,9 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     List<TextMessageWorkHandler> textMessageWorkHandlers;
 
+    @Autowired
+    ImServerProperties imServerProperties;
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt == WebSocketServerProtocolHandler.ServerHandshakeStateEvent.HANDSHAKE_COMPLETE) {
@@ -61,7 +65,7 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
         }
         if (frame instanceof PingWebSocketFrame || checkHeartBeat(frame)) {
             ctx.write(new PongWebSocketFrame(frame.content().retain()));
-            ctx.writeAndFlush(new TextWebSocketFrame(SocketConstants.HEART_BEAT_PONG));
+            ctx.writeAndFlush(new TextWebSocketFrame(imServerProperties.getHeartbeatBody()));
             frame.release();
             return;
         }
@@ -108,7 +112,7 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
             if (StringUtils.isEmpty(text)) {
                 return false;
             }
-            if (text.equals(SocketConstants.HEART_BEAT)) {
+            if (text.equals(imServerProperties.getHeartbeatBody())) {
                 return true;
             }else{
                 return false;

@@ -1,4 +1,4 @@
-package com.xim.system.work;
+package com.xim.server.store;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.SubscriberExceptionHandler;

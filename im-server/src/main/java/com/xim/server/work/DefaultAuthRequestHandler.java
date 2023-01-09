@@ -1,4 +1,4 @@
-package com.xim.server.Work;
+package com.xim.server.work;
 
 import com.xim.server.ImServerProperties;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,13 +30,10 @@ public class DefaultAuthRequestHandler implements AuthRequestHandler {
     @Override
     public boolean checkAuth(ChannelHandlerContext context, FullHttpRequest request) {
         log.info("鉴权通过");
+        // todo 在此对用户权限进行认证，鉴权成功返回true将进行下一步握手操作，鉴权失败将跳转到authError方法处理
         return true;
     }
 
-    @Override
-    public FullHttpResponse authError(ChannelHandlerContext context, FullHttpRequest request) {
-        return new DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.UNAUTHORIZED);
-    }
 
     @Override
     public String authSucc(ChannelHandlerContext context, FullHttpRequest request) {
@@ -51,7 +48,7 @@ public class DefaultAuthRequestHandler implements AuthRequestHandler {
             if (!CollectionUtils.isEmpty(strings)) {
                 return strings.get(0);
             }else {
-                log.error("链接未携带鉴权凭证,链接终止");
+                log.error("链接未携带鉴权凭证,握手终止");
                 throw new RuntimeException("非法用户");
             }
         }

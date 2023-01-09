@@ -1,4 +1,4 @@
-package com.xim.server.Utils;
+package com.xim.server.utils;
 
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.ChannelFuture;

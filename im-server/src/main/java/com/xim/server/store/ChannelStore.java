@@ -1,7 +1,7 @@
-package com.xim.server.Store;
+package com.xim.server.store;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
-import com.xim.server.Constants.SocketConstants;
+import com.xim.server.constants.SocketConstants;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

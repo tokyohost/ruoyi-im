@@ -1,13 +1,12 @@
 package com.xim.system.work;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.google.common.eventbus.AsyncEventBus;
+import com.xim.server.store.GroupChannel;
+import com.xim.server.store.GroupChannelStore;
 import com.xim.system.domain.TextMsg;
 import com.xim.system.enums.MsgType;
-import com.xim.system.utils.AsyncThreadPoolManage;
-import io.netty.channel.ChannelHandlerContext;
+import com.xim.server.utils.AsyncThreadPoolManage;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

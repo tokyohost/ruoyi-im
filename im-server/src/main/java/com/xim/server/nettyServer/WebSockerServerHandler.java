@@ -1,8 +1,8 @@
-package com.xim.server.NettyServer;
+package com.xim.server.nettyServer;
 
-import com.xim.server.Constants.SocketConstants;
-import com.xim.server.Store.ChannelStore;
-import com.xim.server.Work.AuthRequestHandler;
+import com.xim.server.constants.SocketConstants;
+import com.xim.server.store.ChannelStore;
+import com.xim.server.work.AuthRequestHandler;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.util.List;
 
-import static com.xim.server.Utils.HttpUtils.sendHttpResponse;
+import static com.xim.server.utils.HttpUtils.sendHttpResponse;
 import static io.netty.handler.codec.http.HttpMethod.GET;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;

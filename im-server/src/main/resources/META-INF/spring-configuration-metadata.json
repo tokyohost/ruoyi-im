@@ -19,6 +19,14 @@
     {
       "name": "im.server.groupChatThreadNumber",
       "defaultValue": 32
+    },
+    {
+      "name": "im.server.heartbeatBody",
+      "defaultValue": "heartbeat"
+    },
+    {
+      "name": "im.server.heartBeatReply",
+      "defaultValue": "pong"
     }
   ]
 }

@@ -47,7 +47,7 @@ public abstract class BaseMsg<T> {
     private T sendBy;
 
     /**
-     * 接收人
+     * 接收 人/群
      */
     private T sendTo;
     /**

@@ -40,6 +40,16 @@ public class ImServerProperties {
         return this;
     }
 
+    /**
+     * 心跳包内容
+     */
+    String heartbeatBody;
+
+    /**
+     * 心跳包响应
+     */
+    String heartBeatReply;
+
     public String getAuthKey() {
         return authKey;
     }
@@ -64,6 +74,24 @@ public class ImServerProperties {
 
     public ImServerProperties setPort(Integer port) {
         this.port = port;
+        return this;
+    }
+
+    public String getHeartbeatBody() {
+        return heartbeatBody;
+    }
+
+    public ImServerProperties setHeartbeatBody(String heartbeatBody) {
+        this.heartbeatBody = heartbeatBody;
+        return this;
+    }
+
+    public String getHeartBeatReply() {
+        return heartBeatReply;
+    }
+
+    public ImServerProperties setHeartBeatReply(String heartBeatReply) {
+        this.heartBeatReply = heartBeatReply;
         return this;
     }
 }

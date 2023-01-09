@@ -1,6 +1,6 @@
-package com.xim.server.Work;
+package com.xim.server.work;
 
-import com.xim.server.Store.ChannelStore;
+import com.xim.server.store.ChannelStore;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

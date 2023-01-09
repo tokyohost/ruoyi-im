@@ -1,4 +1,4 @@
-package com.xim.server.NettyServer;
+package com.xim.server.nettyServer;
 
 import cn.hutool.core.net.NetUtil;
 import com.xim.server.ImServerProperties;

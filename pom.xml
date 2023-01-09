@@ -190,6 +190,7 @@
         <module>ruoyi-common</module>
         <module>im-server</module>
         <module>im-system</module>
+        <module>im-api</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -1,5 +1,6 @@
 package com.xim.system.work;
 
+import cn.hutool.core.lang.Snowflake;
 import com.alibaba.fastjson2.JSONObject;
 import com.xim.server.work.TextMessageWorkHandler;
 import com.xim.system.domain.BaseMsg;
@@ -28,6 +29,9 @@ public class ChatMessageWorkHandler implements TextMessageWorkHandler {
     Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     MsgProcesserManage msgProcessers;
+
+    //生成唯一msgid
+    Snowflake snowflake = new Snowflake();
     @Override
     public void handMessage(String msg, String uid, ChannelHandlerContext ctx) {
         log.info("ChatMessageWorkHandler 收到用户:"+uid+" 消息:"+msg);
@@ -48,6 +52,9 @@ public class ChatMessageWorkHandler implements TextMessageWorkHandler {
             if (msgType.equalsIgnoreCase(value.getType())) {
                 MsgProcesser processer = msgProcessers.getProcesser(value);
                 BaseMsg parseMsg = processer.parseMsg(msg);
+
+                parseMsg.setMsgId(generateMsgId(msg,uid,ctx));
+                parseMsg.setMsgType(value);
                 parseMsg.setWebSocketFrame(frame);
                 processer.process(parseMsg,uid,ctx);
                 processed = true;
@@ -65,5 +72,10 @@ public class ChatMessageWorkHandler implements TextMessageWorkHandler {
     public boolean handTextMessage(String msg, String uid, ChannelHandlerContext ctx) {
         log.info("收到Text 消息,uid:{},msg:{}",uid,msg);
         return true;
+    }
+
+    @Override
+    public String generateMsgId(String msg, String uid, ChannelHandlerContext ctx) {
+        return snowflake.nextIdStr();
     }
 }

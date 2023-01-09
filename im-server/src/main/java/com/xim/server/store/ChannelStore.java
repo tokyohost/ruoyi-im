@@ -1,10 +1,15 @@
 package com.xim.server.store;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
+import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.EventBus;
 import com.xim.server.constants.SocketConstants;
+import com.xim.server.utils.AsyncThreadPoolManage;
+import com.xim.server.work.EventBusChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -24,6 +29,7 @@ public class ChannelStore {
     private final ConcurrentHashMap<String, ReentrantReadWriteLock> locks = new ConcurrentHashMap<>();
     private final ConcurrentHashSet<ChannelHandlerContext> allChannel = new ConcurrentHashSet<>();
     private final ConcurrentHashMap<String, HashSet<ChannelHandlerContext>> store = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, EventChannel> eStore = new ConcurrentHashMap<>();
 
     public Optional<HashSet<ChannelHandlerContext>> findById(String id) {
         if (Objects.isNull(id)) {
@@ -36,6 +42,26 @@ public class ChannelStore {
         try {
             if (b) {
                 HashSet<ChannelHandlerContext> orDefault = store.getOrDefault(id, null);
+                return Objects.isNull(orDefault) || orDefault.isEmpty() ? Optional.empty() : Optional.of(orDefault);
+            } else {
+                log.error("lock cannot get");
+                return Optional.empty();
+            }
+        } finally {
+            readLock.unlock();
+        }
+    }
+    public Optional<EventChannel> findBusById(String id) {
+        if (Objects.isNull(id)) {
+            return Optional.empty();
+        }
+        ReentrantReadWriteLock reentrantReadWriteLock = locks.getOrDefault(id, new ReentrantReadWriteLock());
+        locks.put(id, reentrantReadWriteLock);
+        ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
+        boolean b = readLock.tryLock();
+        try {
+            if (b) {
+                EventChannel orDefault = eStore.getOrDefault(id, null);
                 return Objects.isNull(orDefault) ? Optional.empty() : Optional.of(orDefault);
             } else {
                 log.error("lock cannot get");
@@ -46,7 +72,7 @@ public class ChannelStore {
         }
     }
 
-    public boolean registChannel(String id, ChannelHandlerContext ctx) {
+    public void registChannel(String id, ChannelHandlerContext ctx) {
         ctx.channel().config().setConnectTimeoutMillis(1000 * 60 * 60 * 24);
         ReentrantReadWriteLock readWriteLock = locks.getOrDefault(id, new ReentrantReadWriteLock());
         locks.put(id, readWriteLock);
@@ -62,11 +88,21 @@ public class ChannelStore {
                 HashSet<ChannelHandlerContext> ctxs = store.get(id);
                 ctxs.addAll(channelHandlerContexts);
                 store.put(id, ctxs);
-                return true;
+//                return true;
             } else {
                 //new ChannelSet
                 store.put(id, channelHandlerContexts);
-                return true;
+//                return true;
+            }
+
+            //注册到eventbus
+            boolean eb = eStore.containsKey(id);
+            if (eb) {
+                eStore.get(id).register(new EventBusChannelHandler(ctx));
+            }else{
+                EventChannel asyncEventBus = new EventChannel(AsyncThreadPoolManage.getGroupChatExecutor());
+                asyncEventBus.register(new EventBusChannelHandler(ctx));
+                eStore.put(id, asyncEventBus);
             }
 //                log.error("cannot get lock add channel fail");
 //                return false;
@@ -75,7 +111,7 @@ public class ChannelStore {
         }
     }
 
-    public boolean unRegistChannel(ChannelHandlerContext ctx) {
+    public void unRegistChannel(ChannelHandlerContext ctx) {
         allChannel.remove(ctx);
         boolean b = ctx.channel().hasAttr(SocketConstants.USER_ID);
         if (b) {
@@ -90,17 +126,28 @@ public class ChannelStore {
                     //remove
                     HashSet<ChannelHandlerContext> ctxs = store.get(id);
                     ctxs.remove(ctx);
-                    store.put(id, ctxs);
-                    return true;
-                } else {
-                    return true;
+                    if (ctxs.isEmpty()) {
+                        store.remove(id);
+                        locks.remove(id);
+                    }else{
+                        store.put(id, ctxs);
+                    }
+                }
+
+                //eventbus
+                boolean eb = eStore.containsKey(id);
+                if (eb) {
+                    EventChannel asyncEventBus = eStore.get(id);
+                    asyncEventBus.unregister(ctx);
+                    if (asyncEventBus.getSubscribers().get() == 0) {
+                        eStore.remove(id);
+                    }
                 }
             } finally {
                 writeLock.unlock();
             }
         } else {
             log.error("channel loss attr ! unRegistChannel Fail");
-            return false;
         }
     }
 

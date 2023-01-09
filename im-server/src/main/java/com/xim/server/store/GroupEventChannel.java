@@ -1,29 +1,33 @@
 package com.xim.server.store;
 
-import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 
 import java.util.concurrent.Executor;
 
-public class GroupChannel extends AsyncEventBus {
+/**
+ * @author xuehui_li
+ * @Version 1.0
+ * @date 2023/1/9 11:02
+ * @Content
+ */
 
+public class GroupEventChannel extends EventChannel{
     /**
      * 群组唯一id
      */
     private final String groupId;
 
-    public GroupChannel(String identifier, Executor executor,String groupId) {
+    public GroupEventChannel(String identifier, Executor executor, String groupId) {
         super(identifier, executor);
         this.groupId = groupId;
     }
 
-    public GroupChannel(Executor executor, SubscriberExceptionHandler subscriberExceptionHandler,String groupId) {
+    public GroupEventChannel(Executor executor, SubscriberExceptionHandler subscriberExceptionHandler, String groupId) {
         super(executor, subscriberExceptionHandler);
         this.groupId = groupId;
     }
 
-
-    public GroupChannel(Executor executor,String groupId) {
+    public GroupEventChannel(Executor executor, String groupId) {
         super(executor);
         this.groupId = groupId;
     }

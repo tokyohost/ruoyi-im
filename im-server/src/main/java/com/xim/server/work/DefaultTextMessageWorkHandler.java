@@ -1,5 +1,6 @@
 package com.xim.server.work;
 
+import cn.hutool.core.lang.UUID;
 import com.xim.server.store.ChannelStore;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -13,12 +14,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTextMessageWorkHandler implements TextMessageWorkHandler {
     Logger log = LoggerFactory.getLogger(getClass());
-
-    ChannelStore channelStore;
-
-    public DefaultTextMessageWorkHandler(ChannelStore channelStore) {
-        this.channelStore = channelStore;
-    }
 
     @Override
     public void handMessage(String msg, String uid, ChannelHandlerContext ctx) {
@@ -47,5 +42,9 @@ public class DefaultTextMessageWorkHandler implements TextMessageWorkHandler {
 //            log.warn("user:{} no channel active! send fail!", uid);
 //        }
 
+    }
+    @Override
+    public String generateMsgId(String msg, String uid, ChannelHandlerContext ctx) {
+        return UUID.fastUUID().toString();
     }
 }

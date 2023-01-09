@@ -57,4 +57,10 @@ public enum MsgType{
         this.type = type;
         return this;
     }
+
+
+    @Override
+    public String toString() {
+        return this.type;
+    }
 }

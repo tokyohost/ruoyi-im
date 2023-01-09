@@ -29,13 +29,17 @@ import java.util.List;
 public class MessageServerHandler extends ChannelInboundHandlerAdapter {
 
     Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
+
     ChannelStore channelStore;
     @Autowired
     List<TextMessageWorkHandler> textMessageWorkHandlers;
 
     @Autowired
     ImServerProperties imServerProperties;
+
+    public MessageServerHandler(ChannelStore channelStore) {
+        this.channelStore = channelStore;
+    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {

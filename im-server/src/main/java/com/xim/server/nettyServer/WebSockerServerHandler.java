@@ -31,15 +31,16 @@ import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 public class WebSockerServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
     private ChannelStore channelStore;
 
     @Autowired
     private List<AuthRequestHandler> authRequestHandlers;
 
-    public WebSockerServerHandler() {
+    public WebSockerServerHandler(ChannelStore channelStore) {
         super(false);
+        this.channelStore = channelStore;
     }
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

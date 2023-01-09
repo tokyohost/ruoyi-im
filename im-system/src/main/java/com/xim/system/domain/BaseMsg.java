@@ -1,6 +1,8 @@
 package com.xim.system.domain;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xim.system.enums.MsgType;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 
@@ -53,6 +55,7 @@ public abstract class BaseMsg<T> {
     /**
      * 消息原始frame
      */
+    @JsonIgnore
     private WebSocketFrame webSocketFrame;
 
     public boolean isGroupChatMsg() {
@@ -129,6 +132,6 @@ public abstract class BaseMsg<T> {
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return JSONObject.toJSONString(this, JSONWriter.Feature.WriteEnumsUsingName);
     }
 }

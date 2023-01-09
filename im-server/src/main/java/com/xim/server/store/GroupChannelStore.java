@@ -1,18 +1,18 @@
 package com.xim.server.store;
 
-import com.sun.istack.internal.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-public class GroupChannelStore<T extends GroupChannel> {
 
-    private ConcurrentHashMap<String, T> groupChannelMap = new ConcurrentHashMap<>();
+public class GroupChannelStore{
 
-    public Optional<T> getGroup(@NotNull String groupId) {
+    private ConcurrentHashMap<String, GroupEventChannel> groupChannelMap = new ConcurrentHashMap<>();
+
+    public Optional<GroupEventChannel> getGroup(String groupId) {
         if (groupChannelMap.contains(groupId)) {
             return Optional.of(groupChannelMap.get(groupId));
         }else{
@@ -20,7 +20,7 @@ public class GroupChannelStore<T extends GroupChannel> {
         }
     }
 
-    public boolean setGroup(T group) {
+    public boolean setGroup(GroupEventChannel group) {
         if (StringUtils.hasLength(group.getGroupId())) {
             groupChannelMap.put(group.getGroupId(), group);
             return true;

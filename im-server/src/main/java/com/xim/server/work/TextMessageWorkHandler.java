@@ -42,4 +42,6 @@ public interface TextMessageWorkHandler {
         return false;
     }
 
+     String generateMsgId(String msg,String uid, ChannelHandlerContext ctx);
+
 }

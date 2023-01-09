@@ -1,5 +1,6 @@
 package com.xim.server.utils;
 
+import cn.hutool.system.SystemUtil;
 import com.xim.server.ImServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,14 +9,13 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
-public class AsyncThreadPoolManage {
-    @Autowired
-    ImServerProperties imServerProperties;
 
-    AtomicInteger groupChatThreadName = new AtomicInteger(0);
-    Executor executorService;
-    public Executor getGroupChatExecutor() {
+public class AsyncThreadPoolManage {
+
+
+    private static AtomicInteger groupChatThreadName = new AtomicInteger(0);
+    private static Executor executorService;
+    public static Executor getGroupChatExecutor() {
         if (Objects.nonNull(executorService)) {
             return executorService;
         }else{
@@ -23,13 +23,13 @@ public class AsyncThreadPoolManage {
                 if (Objects.nonNull(executorService)) {
                     return executorService;
                 }else{
-                    Executor executorService = new ThreadPoolExecutor(0, imServerProperties.getGroupChatThreadNumber(), 30L, TimeUnit.MILLISECONDS, new SynchronousQueue(), (t)->{
+                    executorService = new ThreadPoolExecutor(0, SystemUtil.getTotalThreadCount() * 2, 30L, TimeUnit.MILLISECONDS, new SynchronousQueue(), (t)->{
                         Thread thread = Executors.defaultThreadFactory().newThread(t);
                         if (!thread.isDaemon()) {
                             thread.setDaemon(true);
                         }
 
-                        thread.setName("group-chat-" + this.groupChatThreadName.getAndIncrement());
+                        thread.setName("group-chat-" + groupChatThreadName.getAndIncrement());
                         return thread;
                     });
 

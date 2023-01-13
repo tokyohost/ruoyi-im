@@ -39,7 +39,7 @@ public class ChatSession extends BaseEntity
     private Date lastMsgTime;
 
     /** uid 的混淆结果，简单混淆可以按一定规则（按字母顺序排序等方式）拼接两个用户的uid，不建议使用hash，会有一定概率出现哈希冲突，此字段主要用于加快会话查询速度 */
-    @Excel(name = "uid 的混淆结果，简单混淆可以按一定规则", readConverterExp = "按=字母顺序排序等方式")
+    @Excel(name = "uidHash", readConverterExp = "按=字母顺序排序等方式")
     private String uidHash;
 
     /** 发起会话用户 */

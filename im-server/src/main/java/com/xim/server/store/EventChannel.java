@@ -36,7 +36,7 @@ public class EventChannel extends AsyncEventBus {
         subscribers.getAndDecrement();
     }
 
-    public AtomicInteger getSubscribers() {
+    public AtomicInteger getSubscribersCount() {
         return subscribers;
     }
 

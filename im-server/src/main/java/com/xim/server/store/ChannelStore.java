@@ -1,15 +1,12 @@
 package com.xim.server.store;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
-import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
 import com.xim.server.constants.SocketConstants;
 import com.xim.server.utils.AsyncThreadPoolManage;
 import com.xim.server.work.EventBusChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -73,7 +70,7 @@ public class ChannelStore {
     }
 
     public void registChannel(String id, ChannelHandlerContext ctx) {
-        ctx.channel().config().setConnectTimeoutMillis(1000 * 60 * 60 * 24);
+//        ctx.channel().config().setConnectTimeoutMillis(1000 * 60 * 60 * 24);
         ReentrantReadWriteLock readWriteLock = locks.getOrDefault(id, new ReentrantReadWriteLock());
         locks.put(id, readWriteLock);
         ReentrantReadWriteLock.WriteLock writeLock = readWriteLock.writeLock();
@@ -139,7 +136,7 @@ public class ChannelStore {
                 if (eb) {
                     EventChannel asyncEventBus = eStore.get(id);
                     asyncEventBus.unregister(ctx);
-                    if (asyncEventBus.getSubscribers().get() == 0) {
+                    if (asyncEventBus.getSubscribersCount().get() == 0) {
                         eStore.remove(id);
                     }
                 }
